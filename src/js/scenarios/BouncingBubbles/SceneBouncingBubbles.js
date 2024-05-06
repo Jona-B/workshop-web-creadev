@@ -58,12 +58,8 @@ export default class SceneBouncingBubbles extends Scene2D {
         this.bubbles.push(newBubble);
     }
     
-
     removeBubble(bubble) {
-        const index = this.bubbles.indexOf(bubble);
-        if (index !== -1) {
-            this.bubbles.splice(index, 1);
-        }
+        this.bubbles = this.bubbles.filter(b => b !== bubble);
     }
 
     update() {
@@ -114,38 +110,39 @@ export default class SceneBouncingBubbles extends Scene2D {
 
     onDeviceOrientation() {
         /** debug angle */
-        // let coordinates_ = ""
-        // coordinates_ = coordinates_.concat(
-        //     // this.orientation.alpha.toFixed(2), ", ",
-        //     this.orientation.gamma.toFixed(2), ", ", // -> autour de Y = gauche / droite
-        //     this.orientation.beta.toFixed(2) // -> autour de X = avant / arrière
-        // )
-        // this.debug.domDebug = coordinates_
-
+        let debugCoordinates = "";
+        debugCoordinates = debugCoordinates.concat(
+          // this.orientation.alpha.toFixed(2), ", ",
+          this.orientation.gamma.toFixed(2), ", ", // -> around Y = left / right
+          this.orientation.beta.toFixed(2)  // -> around X = forward / backward
+        );
+        this.debug.domDebug = debugCoordinates;
+      
         /** gravity orientation */
-        let gx_ = this.orientation.gamma / 90 // -1 : 1
-        let gy_ = this.orientation.beta / 90 // -1 : 1
-        gx_ = clamp(gx_, -1, 1)
-        gy_ = clamp(gy_, -1, 1)
-        
-        /** debug gravity orientation */
-        // let coordinates_ = ""
-        // coordinates_ = coordinates_.concat(
-        //     gx_.toFixed(2), ", ", // -> autour de Y = gauche / droite
-        //     gy_.toFixed(2) // -> autour de X = avant / arrière
-        // )
-        // this.debug.domDebug = coordinates_
-
+        let gx = this.orientation.gamma / 90; // -1 : 1
+        let gy = this.orientation.beta / 90; // -1 : 1
+        gx = clamp(gx, -1, 1);
+        gy = clamp(gy, -1, 1);
+      
+        /** debug gravity orientation (combined comment) */
+        let gravityCoordinates = "";
+        gravityCoordinates = gravityCoordinates.concat(
+          gx.toFixed(2), ", ",  // around Y = left / right
+          gy.toFixed(2)   // around X = forward / backward
+        );
+        this.debug.domDebugGravity = gravityCoordinates; // Assuming another property for gravity debug
+      
         /** update */
-        gx_ *= this.params.gStrength // apply gravity strength
-        gy_ *= this.params.gStrength // apply gravity strength
+        gx *= this.params.gStrength; // apply gravity strength
+        gy *= this.params.gStrength; // apply gravity strength
         if (!!this.bubbles) {
-            this.bubbles.forEach(b => {
-                b.gx = gx_
-                b.gy = gy_
-            })
+          this.bubbles.forEach(b => {
+            b.gx = gx;
+            b.gy = gy;
+          });
         }
-    }
+      }
+      
 
     resize() {
         super.resize();

@@ -130,19 +130,12 @@ export default class SceneScenario3D extends Scene3D {
     }
 
     removeBubble(bubble) {
-        // Retirer la bulle de la scène Three.js
-        this.remove(bubble);
-    
-        // Retirer la bulle de la simulation Matter.js
-        const index = this.bubbles.indexOf(bubble);
+        const index = this.bubbles.indexOf(bubble)
         if (index !== -1) {
-            this.bubbles.splice(index, 1); // Retirer la bulle du tableau this.bubbles
-            Composite.remove(this.engine.world, bubble.body); // Retirer le corps physique de la simulation
+            this.bubbles.splice(index, 1)
+            Composite.remove(this.engine.world, bubble.body)
+            this.remove(bubble)
         }
-    
-        // Disposer la géométrie et le matériau de la bulle
-        bubble.geometry.dispose();
-        bubble.material.dispose();
     }
 
     update() {
@@ -194,20 +187,20 @@ export default class SceneScenario3D extends Scene3D {
         this.camera.top = this.height / 2
         this.camera.bottom = - this.height / 2
 
-        if (!!this.wallTop && !!this.wallBottom) {
+        if (!!this.wallLeft && !!this.wallTop && !!this.wallRight && !!this.wallBottom) {
             const thickness_ = 15
 
             /** walls sizes */
             this.wallLeft.setSize(thickness_, this.height)
-            this.wallTop.setSize(this.width - 100 * thickness_, thickness_)
+            this.wallTop.setSize(this.width - 15 * thickness_, thickness_)
             this.wallRight.setSize(thickness_, this.height)
-            this.wallBottom.setSize(this.width - 60 * thickness_, thickness_)
+            this.wallBottom.setSize(this.width - 15 * thickness_, thickness_)
 
             /** walls position */
             this.wallLeft.setPosition(-this.width / 2 + thickness_ / 2, 0)
-            this.wallTop.setPosition(-200, this.height / 5 - thickness_ / 2)
+            this.wallTop.setPosition(-120, this.height / 5 - thickness_ / 2)
             this.wallRight.setPosition(this.width / 2 - thickness_ / 2, 0)
-            this.wallBottom.setPosition(0, -this.height / 5 + thickness_ / 2)
+            this.wallBottom.setPosition(120, -this.height / 5 + thickness_ / 2)
         }
     }
 }
